@@ -51,7 +51,7 @@ if ( ! empty( $events ) ) {
 
 	$format = '<div>
 			<dt class="cse-title">%1$s: %2$s</dt>
-			<dd class="cse-location">%3$s at <a href="https://www.google.com/maps/preview#!q=%4$s">%4$s</a></dd>
+			<dd class="cse-location">%3$s - %4$s</dd>
 			<dd class="cse-content">%5$s</dd>
 			%6$s
 		</div>';
@@ -62,18 +62,27 @@ if ( ! empty( $events ) ) {
 		$desc=  apply_filters( 'the_content', wp_kses_post( get_the_content() ) );
 		$event_name= get_post_custom_values('eventname');
 		$event_name= apply_filters( 'the_title', $event_name[0] );
+
 		$loc= get_post_custom_values('location');
-		$loc= $loc[0];
+		$loc_phys= get_post_custom_values('physical');
+
+		if ( ! empty( $loc ) ) {
+			$loc = ( $loc_phys[0] ) ? $loc[0] : '<a href="https://www.google.com/maps/preview#!q='. $loc[0] .'">'. $loc[0] .'</a>';
+		}
+
 		$date= get_post_custom_values('eventdate');
 		$date= $date[0];
 		$pres= get_post_custom_values('preslink');
-		$pres= ($pres[0] != "") ? '<dd class="cse-slides"><a href="'.esc_url( $pres[0] ).'">Slides and Resources</a></dd>' : "";
+		$pres_text= get_post_custom_values('prestext');
+		$pres_text = ( ! empty( $pres_text[0] ) ) ? $pres_text[0] : 'Slides and Resources';
+
+		$pres= ($pres[0] != "") ? '<dd class="cse-slides"><a href="'.esc_url( $pres[0] ).'">'. esc_attr( $pres_text ) .'</a></dd>' : "";
 
 		$output .= sprintf( $format,
 			esc_html( $date ),
 			$title,
 			esc_html( $event_name ),
-			esc_attr( $loc ),
+			wp_kses_post( $loc ),
 			$desc,
 			$pres
 		);
@@ -141,31 +150,6 @@ return $events;
 
 
 add_shortcode( 'cse_events', 'cse_show_events' );
-
-function cse_single_loop(){
-
-	if (have_posts()) : while (have_posts()) : the_post();
-
-			$author= get_post_custom_values('author');
-			$amzn= get_post_custom_values('amazonLink');
-			$status= get_post_custom_values('bookStatus');
-			$r= get_post_custom_values('rating');
-			if($status[0] == 1) $status[1]= "Reading";
-			else if($status[0] == -1) $status[1]= "Finished Reading";
-			else $status[1]= "Want to Read";
-
-			$rating= ($status[0] == -1 && $r[0] != "") ? readlist_build_rating($r[0]) : "--";
-		?>
-
-			<h1 class="entry-title full-title"><em><?php the_title(); ?></em> by: <?php print $author[0]; ?></h1>
-			<p class="status">Status: <?php print $status[1]; ?> <?php if($status[0] == -1){ ?> | Rating: <?php print $rating; ?> <?php } ?></p>
-			<p><?php if($amzn[0] != "") print '<p><a href="'.$amzn[0].'">Get <em>'. get_the_title() .'</em> on Amazon</a></p>'; ?></p>
-
-			<?php the_content(); ?>
-
-
-	<?php endwhile; endif;
-}
 
 
 ?>
