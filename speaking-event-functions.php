@@ -105,7 +105,7 @@ return $output;
 function cse_short_events($numPosts=-1, $previous=false){
 
 global $post;
-$events= "<table class=\"sessions\">\n";
+$events= "<dl class=\"sessions\">\n";
 
 $compare= ($previous) ? '<' : '>=';
 $order= ($previous) ? 'DESC' : 'ASC';
@@ -132,16 +132,14 @@ foreach( $myposts as $post ) : setup_postdata($post); ?>
 			$loc= $loc[0];
 			$date= get_post_custom_values('eventdate');
 			$date= $date[0];
-			$events.="<tr>";
-			$events.= "<td> $title</td>
-						<td>$date</td>
-						<td>$loc</td>";
-			$events.="</tr>";
+			$events.= "<dt> $title</dt>
+						<dd>$date</dd>
+						<dd>$loc</dd>";
 
 
 endforeach;
 
-$events.="</table>";
+$events.="</dl>";
 
 
 return $events;
