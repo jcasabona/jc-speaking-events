@@ -130,6 +130,12 @@ foreach( $myposts as $post ) : setup_postdata($post); ?>
 			$eventName= $eventName[0];
 			$loc= get_post_custom_values('location');
 			$loc= $loc[0];
+			$loc_phys= get_post_custom_values('physical');
+
+			if ( ! empty( $loc ) ) {
+				$loc = ( $loc_phys[0] ) ? $loc[0] : '<a href="https://www.google.com/maps/preview#!q='. $loc[0] .'">'. $loc[0] .'</a>';
+			}
+
 			$date= get_post_custom_values('eventdate');
 			$date= $date[0];
 			$events.= "<dt> $title</dt>
