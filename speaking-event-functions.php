@@ -133,7 +133,7 @@ foreach( $myposts as $post ) : setup_postdata($post); ?>
 			$loc_phys= get_post_custom_values('physical');
 
 			if ( ! empty( $loc ) ) {
-				$loc = ( $loc_phys[0] ) ? $loc[0] : '<a href="https://www.google.com/maps/preview#!q='. $loc[0] .'">'. $loc[0] .'</a>';
+				$loc = ( $loc_phys[0] ) ? $loc : '<a href="https://www.google.com/maps/preview#!q='. $loc .'">'. $loc .'</a>';
 			}
 
 			$date= get_post_custom_values('eventdate');
